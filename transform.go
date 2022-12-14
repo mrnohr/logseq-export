@@ -57,6 +57,16 @@ func removeTabFromMultiLevelBulletPoints(from string) string {
 	})
 }
 
+/*
+*/
+func replaceLinks(from string) string {
+	logseqLink := regexp.MustCompile("\\[\\[(.*)\\]\\]")
+	return logseqLink.ReplaceAllStringFunc(from, func(s string) string {
+		parts := logseqLink.FindStringSubmatch(s)
+		return "[" + parts[1] + "](/" + sanitizeName(parts[1]) + ")"
+	})
+}
+
 const multilineBlocks = `\n?(- .*\n(?:  .*\n?)+)`
 
 /*
@@ -155,6 +165,7 @@ func transformPage(p page, webAssetsPathPrefix string) page {
 		onlyText(firstBulletPointsToParagraphs),
 		onlyText(secondToFirstBulletPoints),
 		onlyText(removeTabFromMultiLevelBulletPoints),
+		onlyText(replaceLinks),
 		extractAssets(webAssetsPathPrefix),
 	)
 }
