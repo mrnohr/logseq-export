@@ -58,12 +58,13 @@ func removeTabFromMultiLevelBulletPoints(from string) string {
 }
 
 /*
+Make [[Page Link]] type links into Hugo-specific links like [Page Link](/page-link)
 */
 func replaceLinks(from string) string {
 	logseqLink := regexp.MustCompile("\\[\\[(.*)\\]\\]")
 	return logseqLink.ReplaceAllStringFunc(from, func(s string) string {
 		parts := logseqLink.FindStringSubmatch(s)
-		return "[" + parts[1] + "](/" + sanitizeName(parts[1]) + ")"
+		return "[" + parts[1] + "](/" + sanitizeName(strings.ToLower(parts[1])) + ")"
 	})
 }
 
